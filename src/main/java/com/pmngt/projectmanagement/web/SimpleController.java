@@ -1,7 +1,5 @@
 package com.pmngt.projectmanagement.web;
 
-import com.pmngt.projectmanagement.persistence.model.Book;
-import com.pmngt.projectmanagement.persistence.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
