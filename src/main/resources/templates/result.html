@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Boot Result</title>
+</head>
+<body>
+    <h1> Result </h1>
+    <p th:text="'author: ' + ${book.author}"></p>
+    <p th:text="'title: ' + ${book.title}"></p>
+    <a href="/create">Submit another message</a>
+</body>
+</html>

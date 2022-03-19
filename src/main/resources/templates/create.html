@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Book Creation</title>
+</head>
+<body>
+    <div>
+        <h1>Create Form</h1>
+        <form action="#" th:action="@{/create}" th:object="${book}" method="post">
+            <p>Title: <input type="text" th:field="*{title}" /></p>
+            <p>Author: <input type="text" th:field="*{author}" /></p>
+            <p><input type="submit" value="Submit"/></p>
+        </form>
+    </div>
+</body>
+</html>
