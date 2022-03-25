@@ -18,7 +18,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Task {
+public class ProjectTask {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE)

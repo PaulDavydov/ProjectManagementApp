@@ -24,13 +24,13 @@ public class Project {
     private Long id;
 
     @NotBlank(message = "Project name is required")
-    private String projectName;
+    private String name;
 
     @NotBlank(message = "Description is required")
     private String projectDesc;
 
     @OneToMany(fetch = LAZY)
-    private List<Task> tasks;
+    private List<ProjectTask> projectTasks;
 
     private Instant createdDate;
 

@@ -16,7 +16,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Priority {
+public class PriorityColor {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE)
@@ -27,7 +27,7 @@ public class Priority {
     @NotNull
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "taskId", referencedColumnName = "taskId")
-    private Task task;
+    private ProjectTask projectTask;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName ="userId")
