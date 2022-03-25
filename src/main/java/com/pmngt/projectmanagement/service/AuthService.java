@@ -1,12 +1,14 @@
 package com.pmngt.projectmanagement.service;
 
 import com.pmngt.projectmanagement.dto.RegisterRequest;
+import com.pmngt.projectmanagement.persistence.model.NotificationEmail;
 import com.pmngt.projectmanagement.persistence.model.User;
 import com.pmngt.projectmanagement.persistence.model.VerificationToken;
 import com.pmngt.projectmanagement.persistence.repository.UserRepository;
 import com.pmngt.projectmanagement.persistence.repository.VerificationTokenRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static com.pmngt.projectmanagement.util.Constants.ACTIVATION_EMAIL;
 import static java.time.Instant.now;
 
 @Service
@@ -23,6 +26,8 @@ public class AuthService { // In charge of creating new user and storing it in t
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final MailContentBuilder mailContentBuilder;
+    private final MailService mailService;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) { // DTO object containing User data
@@ -35,7 +40,12 @@ public class AuthService { // In charge of creating new user and storing it in t
 
         userRepository.save(user); // save to database
 
-        String token = generateVerificationToken(user); //
+        String token = generateVerificationToken(user); // creates token for user activation
+
+        String message = mailContentBuilder.build("Thank you for signing up to the Project Management Application, please" +
+                "click on the below url to activate your account!" + ACTIVATION_EMAIL + "/" + token);
+
+        mailService.sendMail(new NotificationEmail("Please Activate your account: ", user.getEmail(), message));
     }
 
     private String generateVerificationToken(User user) { // token sent as part of verification email
@@ -50,4 +60,6 @@ public class AuthService { // In charge of creating new user and storing it in t
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
+
+    // Need to add method for verifying accounts and enabling after they activate the accounts.
 }
