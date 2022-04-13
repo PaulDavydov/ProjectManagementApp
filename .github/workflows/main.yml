@@ -46,7 +46,7 @@ jobs:
         uses: 'google-github-actions/deploy-appengine@v0'
         with:
           deliverables: './target/ProjectManagement-0.0.1-SNAPSHOT.jar'
-          project_id: '${{ secrets.GCP_PRORJECT }}'
+          project_id: '${{ secrets.GCP_PROJECT }}'
       
       - name: 'show output'
         run: 'echo ${{ steps.deploy.outputs.url }}'
