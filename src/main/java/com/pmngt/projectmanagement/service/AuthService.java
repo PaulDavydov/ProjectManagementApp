@@ -1,6 +1,7 @@
 package com.pmngt.projectmanagement.service;
 
 import com.pmngt.projectmanagement.dto.RegisterRequest;
+import com.pmngt.projectmanagement.exceptions.ProjectManagementException;
 import com.pmngt.projectmanagement.persistence.model.NotificationEmail;
 import com.pmngt.projectmanagement.persistence.model.User;
 import com.pmngt.projectmanagement.persistence.model.VerificationToken;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.pmngt.projectmanagement.util.Constants.ACTIVATION_EMAIL;
@@ -43,7 +45,7 @@ public class AuthService { // In charge of creating new user and storing it in t
         String token = generateVerificationToken(user); // creates token for user activation
 
         String message = mailContentBuilder.build("Thank you for signing up to the Project Management Application, please" +
-                "click on the below url to activate your account!" + ACTIVATION_EMAIL + "/" + token);
+                "click on the below url to activate your account!\n" + ACTIVATION_EMAIL + "/" + token);
 
         mailService.sendMail(new NotificationEmail("Please Activate your account: ", user.getEmail(), message));
     }
@@ -61,5 +63,19 @@ public class AuthService { // In charge of creating new user and storing it in t
         return passwordEncoder.encode(password);
     }
 
-    // Need to add method for verifying accounts and enabling after they activate the accounts.
+    // Create rest controller for verifying that users pressed account link
+
+    public void verifyAccount (String token) {
+        Optional<VerificationToken> verificationTokenOptional = verificationTokenRepository.findByToken(token);
+        verificationTokenOptional.orElseThrow(() -> new ProjectManagementException("Invalid Token"));
+        fetchUserAndEnable(verificationTokenOptional.get());
+    }
+
+    @Transactional
+    private void fetchUserAndEnable(VerificationToken verificationToken) {
+        String username = verificationToken.getUser().getUsername();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ProjectManagementException("User not found with username - " + username));
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
 }
